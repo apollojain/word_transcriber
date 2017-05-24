@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <script src="speakClient.js"></script>
+    <script src="annyang.min.js"></script>
+<style>
+h3, h4, a {font-family: helvetica, sans-serif}
+</style>
+  </head>
+  <body>
+  	<h3>This page will listen to what you say and attempt to repeat it back to you.</h3>
+  	<h4>You must allow access to your microphone. Open your console for debug info. This will not work on a mobile browser.</h4>
+  	<ul>
+  		<li><a href="https://github.com/TalAter/annyang/">https://github.com/TalAter/annyang</a></li>
+  		<li><a href="https://github.com/kripken/speak.js/">https://github.com/kripken/speak.js</a></li>
+  	</ul>
+  	<pre>
+
+if (annyang) {
+  	
+  var sayThis = function(repeat) {
+  	speak(repeat);
+  }
+
+  // Let's define a command.
+  var commands = {
+    '*repeat': sayThis
+  };
+
+  // Debug info for the console
+  annyang.debug();
+
+  // Initialize annyang with our commands
+  annyang.init(commands);
+
+  // Start listening.
+  annyang.start();
+}
+
+  	</pre>
+    <div id="audio"></div>
+  </body>
+  <script type="text/javascript">
+	if (annyang) {
+	  	
+	  var sayThis = function(repeat) {
+	  	speak(repeat);
+	  }
+
+	  // Let's define a command.
+	  var commands = {
+	    '*repeat': sayThis
+	  };
+
+    // Turn on debugging for the console
+		annyang.debug();
+
+	  // Initialize annyang with our commands
+	  annyang.init(commands);
+
+	  // Start listening.
+	  annyang.start();
+	}
+  </script>
+</html>
