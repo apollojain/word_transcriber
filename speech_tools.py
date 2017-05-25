@@ -3,6 +3,7 @@ import os
 
 final_string = ''
 filename = 'result.docx'
+
 def active_listen():
  
     r = sr.Recognizer()
@@ -34,7 +35,10 @@ def instructions():
     active_speech('Your current document will appear in an asynchronous preview that will be converted to microsoft word format later.')
 
 def take_input():
-    active_speech('Enter a command.')
+    global final_string
+    global filename
+    print filename
+    active_speech('Say a command.')
     result = active_listen()
     if result == 'hdr':
         active_speech('What size header would you like? Small, medium, or large?')
@@ -45,15 +49,13 @@ def take_input():
             active_speech('Is that correct?')
             response = active_listen()
             if response == 'yes':
-                final_string += '<' + size + '>' + sentence.capitalize() + '</' +  size + '>\n\n'
+                final_string += '<' + size + '>' + header.capitalize()
             else: 
-                active_speech('We are sorry. Try that sentence again.')
+                active_speech('We are sorry. Try that again.')
         else:
             active_speech('We are sorry. We do not recognize this font size.')
-    elif result == 'br':
-        final_string += '\n'
     elif result == 'pr':
-        final_string += '\n\t'
+        final_string += '||pr||\n\t'
     elif result == 'tx':
         active_speech('Speak a sentence')
         sentence = active_listen()
@@ -66,11 +68,13 @@ def take_input():
     elif result == 'end':
         active_speech('Thank you for using the word document transcriber.')
         active_speech('The document has been saved to ' + filename)
+        return
     else: 
         active_speech('We are sorry. We did not recognize this command. Please try again.')
     take_input()
 
 def ping_pong():
+    global filename
     active_speech('Welcome to the speech to word document transcriber.')
     active_speech('Would you like to hear instructions?')
     result = active_listen()
@@ -78,9 +82,6 @@ def ping_pong():
         instructions()
     active_speech('Would you like to begin?')
     result = active_listen()
-    
-
-    
     if result == 'yes':
         active_speech('What would you like to call the document?')
         result = active_listen()
