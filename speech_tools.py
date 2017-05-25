@@ -1,5 +1,6 @@
 import speech_recognition as sr
 import os
+import process_helpers as ph
 
 final_string = ''
 filename = 'result.docx'
@@ -27,10 +28,10 @@ def active_speech(text):
 
 def instructions():
     active_speech('Instructions are simple. For each new piece of text you want, speak into the microphone.')
-    active_speech('To make a header, say h d r.')
-    active_speech('To add a line break, say b r')
-    active_speech('To start a new paragraph, say p r. It will be indented automatically.')
-    active_speech('To just add more text, say t x')
+    active_speech('To make a header, say header.')
+    active_speech('To start a new paragraph, say paragraph. It will be indented automatically.')
+    active_speech('To just add more text, say text')
+    active_speech('If you would like to see a preview, say preview.')
     active_speech('Otherwise, if you would like to end the document, say end.')
     active_speech('Your current document will appear in an asynchronous preview that will be converted to microsoft word format later.')
 
@@ -49,14 +50,14 @@ def take_input():
             active_speech('Is that correct?')
             response = active_listen()
             if response == 'yes':
-                final_string += '<' + size + '>' + header.capitalize()
+                final_string += '||' + size + '||' + header.capitalize()
             else: 
                 active_speech('We are sorry. Try that again.')
         else:
             active_speech('We are sorry. We do not recognize this font size.')
-    elif result == 'pr':
+    elif result == 'paragraph':
         final_string += '||pr||\n\t'
-    elif result == 'tx':
+    elif result == 'text':
         active_speech('Speak a sentence')
         sentence = active_listen()
         active_speech('Is that correct?')
@@ -65,8 +66,17 @@ def take_input():
             final_string += ' ' + sentence.capitalize() + '.'
         else: 
             active_speech('We are sorry. Try that sentence again.')
+    elif result == 'image':
+        active_speech('Say the keyword that you would like to be searched.')
+        keyword = active_listen()
+        ph.find_flickr_photo(keyword)
+        active_speech('An image of this keyword has been added to the document.')
+    elif result == 'preview':
+        active_speech('OK. Opening preview.')
+        ph.preview(final_string, filename)
     elif result == 'end':
         active_speech('Thank you for using the word document transcriber.')
+        ph.process_string_to_doc(final_string, filename)
         active_speech('The document has been saved to ' + filename)
         return
     else: 
