@@ -3,6 +3,7 @@ import subprocess
 import urllib
 from flickrapi import FlickrAPI
 import secret_stuff
+import os.path
 
 FLICKR_PUBLIC = secret_stuff.public
 FLICKR_SECRET = secret_stuff.secret
@@ -11,11 +12,19 @@ def find_flickr_photo(keyword):
 	flickr = FlickrAPI(FLICKR_PUBLIC, FLICKR_SECRET, format='parsed-json')
 	extras='url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o'
 	cats = flickr.photos.search(text=keyword, per_page=5, extras=extras)
-	photo_url = 'http://www.nubarter.com/images/no-image-found.jpg'
+	photo_url = 'images/no-image-found.jpg'
 	photos = cats['photos']['photo']
 	if len(photos) > 0: 
 		photo_url = photos[0]['url_c']
-	return photo_url
+	else: 
+		return photo_url
+	i = 0
+	savename = keyword
+	while os.path.isfile('images/' + savename + str(i) + '.jpg'):
+		i += 1
+	result_path = 'images/' + savename + str(i) + '.jpg'
+	urllib.urlretrieve(photo_url, result_path)
+	return result_path
 
 
 def process_string_to_doc(string, filename):
@@ -47,6 +56,6 @@ def save_url_from_web(address, filename):
 
 
 if __name__ == '__main__':
-	# string = "||small|| My name is fred ||pr|| \n\tI live in a button factory"
-	# process_string_to_doc(string, 'sample.docx')
-	print find_flickr_photo('cat')
+	string = "||small|| My name is fred ||pr|| \n\tI live in a button factory ||img|| https://farm5.staticflickr.com/4198/34142658203_9f41601bdc_c.jpg"
+	process_string_to_doc(string, 'sample.docx')
+	# print find_flickr_photo('cat')

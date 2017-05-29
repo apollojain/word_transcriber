@@ -1,0 +1,9 @@
+Make sure speech handles
+1. Images
+2. Headers (various sizes)
+	a. Small
+	b. Medium
+	c. Large
+3. Save pictures
+4. There is an issue with text being a thing 
+5. Icon to open up recording item
